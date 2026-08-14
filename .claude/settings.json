@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where bun *)",
+      "Read(//c/Users/windows/.bun/**)",
+      "Bash(where npm *)",
+      "PowerShell(powershell -c \"irm bun.sh/install.ps1 | iex\")",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\windows\\\\.bun\\\\bin;\" + $env:Path; bun --version)",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\windows\\\\.bun\\\\bin;\" + $env:Path; Set-Location \"C:\\\\Users\\\\windows\\\\Downloads\\\\Aryan Downloads\\\\Radiology-Project\\\\Viewers\"; bun run dev:fast)"
+    ]
+  }
+}

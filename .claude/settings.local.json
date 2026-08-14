@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\admin\\\\Desktop\\\\Varun\\\\Radiology-Project\\\\frontend\\\\src\" -Recurse -Name)",
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\admin\\\\Desktop\\\\Varun\\\\Radiology-Project\\\\frontend\\\\src\" -Recurse | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\(\"c:\\\\Users\\\\admin\\\\Desktop\\\\Varun\\\\Radiology-Project\\\\frontend\\\\src\\\\\", \"\"\\) } | head -50)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\admin\\\\Desktop\\\\Varun\\\\Radiology-Project\\\\frontend\\\\src\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)"
+    ]
+  }
+}

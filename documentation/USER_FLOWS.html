@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Armorray — User Flows</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --panel: #ffffff;
+    --border: #e2e0da;
+    --text: #262420;
+    --muted: #6b675f;
+    --accent: #8a5a3b;
+    --accent-bg: #f1e6dc;
+    --warn-bg: #fff4e5;
+    --warn-border: #e3a94f;
+    --tech: #2f6b4f;
+    --qa: #a3541e;
+    --rad: #2e5fa3;
+    --admin: #6b3fa0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+  }
+  header h1 { margin: 0 0 4px 0; font-size: 1.3rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  .layout {
+    display: flex;
+    max-width: 1180px;
+    margin: 0 auto;
+    gap: 20px;
+    padding: 20px;
+    align-items: flex-start;
+  }
+  nav.flowlist {
+    flex: 0 0 230px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: sticky;
+    top: 20px;
+  }
+  nav.flowlist button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+  nav.flowlist button:last-child { border-bottom: none; }
+  nav.flowlist button:hover { background: var(--accent-bg); }
+  nav.flowlist button.active { background: var(--accent); color: #fff; font-weight: 600; }
+  main { flex: 1; min-width: 0; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 26px;
+  }
+  .flow-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .flow-title h2 { margin: 0; font-size: 1.35rem; }
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge.Technician { background: var(--tech); }
+  .badge.QA { background: var(--qa); }
+  .badge.Radiologist { background: var(--rad); }
+  .badge.Admin { background: var(--admin); }
+  .badge.Multiple { background: var(--muted); }
+  .progress { color: var(--muted); font-size: 0.85rem; margin-bottom: 18px; }
+  .content-grid {
+    display: flex;
+    gap: 26px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .steps-col { flex: 1 1 360px; min-width: 300px; }
+  .diagram-col { flex: 1 1 380px; min-width: 300px; }
+  .steps-col ol { padding-left: 22px; margin: 0; }
+  .steps-col li { margin-bottom: 10px; }
+  .steps-col code, .content-grid code {
+    background: var(--accent-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+  .diagram-box {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    background: #fcfcfb;
+    overflow-x: auto;
+  }
+  .diagram-box svg { max-width: 100%; height: auto; }
+  .notes {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .callout {
+    margin-top: 20px;
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+  }
+  .callout strong { color: #7a4a12; }
+  .navbtns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 26px;
+  }
+  .navbtns button {
+    padding: 9px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .navbtns button:disabled { opacity: 0.4; cursor: default; }
+  .navbtns button:not(:disabled):hover { background: var(--accent-bg); }
+  table.appendix { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+  table.appendix th, table.appendix td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.appendix th { background: #f2f0ec; }
+  @media (max-width: 800px) {
+    .layout { flex-direction: column; }
+    nav.flowlist { position: static; width: 100%; flex: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Armorray — Verified User Flows</h1>
+  <p>Every button label and screen name below was copied from the actual application code, not guessed. Items marked ⚠️ needed manual verification.</p>
+</header>
+
+<div class="layout">
+  <nav class="flowlist" id="flowlist"></nav>
+  <main>
+    <div class="card">
+      <div class="flow-title">
+        <h2 id="flow-title-text"></h2>
+        <span class="badge" id="flow-role-badge"></span>
+      </div>
+      <div class="progress" id="flow-progress"></div>
+      <div class="content-grid">
+        <div class="steps-col">
+          <ol id="flow-steps"></ol>
+        </div>
+        <div class="diagram-col">
+          <div class="diagram-box"><div class="mermaid" id="mermaid-target">Loading diagram…</div></div>
+        </div>
+      </div>
+      <div id="flow-notes"></div>
+      <div class="navbtns">
+        <button id="prevBtn">&larr; Previous</button>
+        <button id="nextBtn">Next &rarr;</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+mermaid.initialize({ startOnLoad: false, theme: 'default', flowchart: { curve: 'basis' } });
+
+const FLOWS = [
+{
+  title: "1. Technician: Uploading a New Scan/Study",
+  role: "Technician",
+  steps: [
+    "<strong>Technician Dashboard</strong> (case worklist) → click <code>New Case Study</code> (<code>New Case</code> on mobile).",
+    "The <strong>Case Creation</strong> wizard opens — 4 steps: <em>Upload → Patient → History → Review</em>.",
+    "On <strong>Upload</strong>, choose a tab: <code>Folder</code> (drag/drop DICOM files, auto-reads patient/scan details), <code>Image Upload</code> (JPG/PNG, auto-converted to DICOM), <code>PACS Import</code> (search hospital PACS, click <code>Query PACS</code> then <code>Select Study</code>), or <code>PACS Received</code> (auto-arrived studies — click <code>Enrich</code> on one needing details).",
+    "Step 2 <strong>Patient</strong>: confirm/enter patient details.",
+    "Step 3 <strong>History</strong>: add clinical history (one-click templates available).",
+    "Step 4 <strong>Review</strong>: a checklist confirms identity, parameters, history, and completeness.",
+    "Click <code>Submit</code>.",
+    "Confirmation appears, wizard closes, case appears in the worklist."
+  ],
+  mermaid: `flowchart TD
+    A["Technician Dashboard<br/>(case worklist)"] --> B["Click 'New Case Study'"]
+    B --> C["Case Creation wizard opens<br/>Step 1: Upload"]
+    C --> D{"Choose an upload tab"}
+    D -->|"Folder"| E["'Upload Study Folder'<br/>drag/drop DICOM files"]
+    D -->|"Image Upload"| F["'Upload Clinical Images'<br/>JPG/PNG, auto-converted to DICOM"]
+    D -->|"PACS Import"| G["Search hospital PACS<br/>'Query PACS' then 'Select Study'"]
+    D -->|"PACS Received"| H["Pick an auto-arrived study<br/>click 'Enrich'"]
+    E --> I["Step 2: Patient details"]
+    F --> I
+    G --> I
+    H --> I
+    I --> J["Step 3: Clinical History"]
+    J --> K["Step 4: Review checklist"]
+    K --> L["Click 'Submit'"]
+    L --> M["Confirmation shown<br/>Case appears in worklist"]`,
+  notes: `<div class="notes">"PACS Export" lives inside the same modal but is a separate action (sending a study out), not part of creating a new case.<br>Sources: CaseCreationModal.tsx, PacsReceivedPanel.tsx.</div>`
+},
+{
+  title: "2. QA: Reviewing and Routing a Study",
+  role: "QA",
+  steps: [
+    "<strong>QA Dashboard</strong> → <strong>Study Reception Queue</strong> — every incoming case has an action button.",
+    "To reject: click <code>Reject</code> → <strong>Reject Study</strong> window → pick one mandatory reason (Motion Artifacts, Missing Key Series, Poor Contrast, Wrong Patient ID/Name, Age/Sex Mismatch, History Doesn't Match Study, Wrong Body Part) → optional notes → click <code>Confirm Rejection</code> → case returns to the technician.",
+    "To accept: click <code>Accept</code> → goes straight to the assignment screen.",
+    "⚠️ Verified in code: clicking Accept does NOT show a separate identity/image-quality checklist screen today, even though that screen exists in the underlying code — see Appendix.",
+    "The assignment screen (<strong>Clinical Dispatch Station</strong>) opens. Toggle <code>Radiologist</code> or <code>External Partners</code>.",
+    "Browse the doctor list (a 'Recommended' badge marks the suggested doctor) → click <code>Assign</code>.",
+    "Click <code>Dispatch to Radiologist Assignment</code>.",
+    "Confirmation shown, case returns to the queue as <strong>Assigned</strong>."
+  ],
+  mermaid: `flowchart TD
+    A["QA Dashboard<br/>'Study Reception Queue'"] --> B{"Choose an action on a case"}
+    B -->|"Accept"| C["Straight to 'Clinical Dispatch Station'<br/>(assignment screen)"]
+    B -->|"Reject"| D["'Reject Study' window opens"]
+    D --> E["Pick a mandatory reason<br/>+ optional notes"]
+    E --> F["Click 'Confirm Rejection'"]
+    F --> G["Case sent back to technician"]
+    C --> H["Toggle 'Radiologist' or<br/>'External Partners'"]
+    H --> I["Browse doctor list<br/>Smart Match suggests one"]
+    I --> J["Click 'Assign' on a doctor"]
+    J --> K["Click 'Dispatch to Radiologist Assignment'"]
+    K --> L["Confirmation shown<br/>notification sent to doctor"]
+    L --> M["Back to queue<br/>case now shows 'Assigned'"]`,
+  notes: `<div class="notes">The QA rejection window is the same shared component radiologists use to reject a case.<br>Sources: ReceptionQueue.tsx, AssignmentManager.tsx, DoctorDiscovery.tsx.</div>`
+},
+{
+  title: "3. Radiologist: Opening a Study and Writing a Report",
+  role: "Radiologist",
+  steps: [
+    "<strong>Radiologist Dashboard</strong> → <strong>Diagnostic Worklist</strong> → <strong>Active Worklist</strong> tab.",
+    "To view images: click the eye icon on a case row (tooltip <code>View DICOM</code>) → opens the image viewer in a <strong>new browser tab</strong>.",
+    "To work on the report: for a brand-new case, click <code>Accept</code> or <code>Reject</code>. Once accepted, the button reads <code>Start</code>, then later <code>Resume</code> or <code>Review</code>.",
+    "Clicking Start/Resume/Review opens the <strong>Report Editor</strong> (with a <code>Back to Worklist</code> button always available).",
+    "Optional: <code>Start Dictation</code> (voice-to-text), <code>Sync Patient Details</code>, <code>Insert Signature</code> (first time opens an Upload Digital Signature window).",
+    "Write the report (templates/shortcuts available).",
+    "Click <code>Save Draft</code> (confirms progress saved) or <code>Finalize Report</code> (confirms submitted to QA)."
+  ],
+  mermaid: `flowchart TD
+    A["Radiologist Dashboard<br/>'Diagnostic Worklist'"] --> B["Find case in 'Active Worklist' tab"]
+    B -->|"Eye icon, 'View DICOM'"| I["Image viewer opens<br/>in a new browser tab"]
+    B --> C{"Newly assigned case?"}
+    C -->|"Yes"| D{"Click 'Accept' or 'Reject'"}
+    D -->|"Reject"| E["Rejection window<br/>pick reason, Confirm"]
+    E --> F["Case returns to QA"]
+    D -->|"Accept"| G["Button now reads 'Start'"]
+    C -->|"No, already in progress"| G2["Button reads 'Resume' or 'Review'"]
+    G --> H["Report Editor opens"]
+    G2 --> H
+    H --> J["Write report<br/>dictation / templates / signature"]
+    J --> K{"Click one"}
+    K -->|"'Save Draft'"| L["Confirms: Progress saved"]
+    K -->|"'Finalize Report'"| M["Confirms: submitted to QA"]`,
+  notes: `<div class="notes">Viewing images and writing the report are two separate, parallel actions — typically done in two browser tabs at once.<br>Sources: WorklistTable.tsx, ReportingEditor.tsx, SignatureModal.tsx.</div>`
+},
+{
+  title: "4. Report Going Back Out to the Hospital",
+  role: "QA",
+  steps: [
+    "<strong>QA Dashboard</strong> → <strong>Study Reception Queue</strong> → click <code>Review</code> on a case with a submitted report.",
+    "The same <strong>Report Editor</strong> radiologists use opens (QA sees a hospital-letterhead picker instead of templates).",
+    "Click <code>Save Draft</code> (confirms updated) or <code>Finalize Report</code>.",
+    "Finalizing shows: <em>'Report Finalized — Study locked and dispatched to hospital.'</em> The case is now permanently locked and a billing record is generated.",
+    "The finished report can be downloaded as: DOCX (Full Banner), PDF (Full Banner), DOCX (Draft – No Banner), PDF (Draft – No Banner)."
+  ],
+  mermaid: `flowchart TD
+    A["QA Dashboard - Reception Queue"] --> B["Click 'Review' on a<br/>submitted-report case"]
+    B --> C["Report Editor opens<br/>(QA sees letterhead/banner picker)"]
+    C --> D{"Click one"}
+    D -->|"'Save Draft'"| E["Confirms: Report Updated by QA"]
+    D -->|"'Finalize Report'"| F["Confirms: Report Finalized -<br/>Study locked and dispatched to hospital"]
+    F --> G["Case locked, billing record created"]
+    G --> H["Report downloadable:<br/>DOCX/PDF, Full Banner or Draft"]`,
+  notes: `<div class="callout"><strong>⚠️ Needs manual verification:</strong> the confirmation says "dispatched to hospital," but only the lock + in-platform download was confirmed in code. Whether an actual email or hospital-portal notification also fires automatically was not confirmed.</div>`
+},
+{
+  title: "5. Creating a \"View-Only\" Share Link",
+  role: "Technician",
+  steps: [
+    "<strong>Technician Dashboard</strong> → worklist → click the share icon on a case row (tooltip <code>Secure Sharing</code>).",
+    "A <strong>Secure Study Sharing</strong> window opens.",
+    "Choose a Viewer Role — today, only <code>External User</code> actually works; other options exist in the code but are switched off.",
+    "Choose an Expiry: 1 Hour, 6 Hours, 24 Hours, or 7 Days.",
+    "Click <code>Generate Secure Link</code>.",
+    "A confirmation panel shows the link with a copy button; click <code>Done</code>, or find it later in the <strong>Active Share Links</strong> list (copy/revoke anytime)."
+  ],
+  mermaid: `flowchart TD
+    A["Technician Dashboard - Worklist"] --> B["Click share icon<br/>'Secure Sharing' on a case row"]
+    B --> C["'Secure Study Sharing' window opens"]
+    C --> D["Viewer Role: only 'External User'<br/>actually works today"]
+    D --> E["Pick Expiry:<br/>1hr / 6hr / 24hr / 7 days"]
+    E --> F["Click 'Generate Secure Link'"]
+    F --> G["Link shown + copy button"]
+    G --> H["'Done', or link is added to<br/>'Active Share Links' list"]`,
+  notes: `<div class="callout"><strong>⚠️ This does NOT currently guarantee "view-only":</strong> the share screen never actually says "view-only" anywhere on screen. And separately, the Admin's own tool-permission screen (Flow 8) admits that an unconfigured role shows <em>all</em> tools by default, not none. Recommend checking the "External User" row in Admin → Viewer Control before promising a client this is strictly view-only.</div>`
+},
+{
+  title: "6. Billing-Related Actions",
+  role: "Admin",
+  steps: [
+    "⚠️ Correction: a technician billing screen exists in the code but isn't connected to anything clickable today; QA has no billing screen at all. The real, working billing actions are all in Admin.",
+    "<strong>Set a price:</strong> Admin Dashboard → sidebar <code>Tariff Master</code> → click <code>New Rule</code> → fill Modality/Study/Base Price/surcharges → click <code>Create Rule</code>. (A <code>Bulk Import</code> option exists too.)",
+    "<strong>Generate an invoice:</strong> sidebar <code>Hospital Billing</code> → click <code>Generate Monthly Run</code> (current month only, no date picker yet) → download via <code>PDF</code> or open <code>View Details</code>.",
+    "<strong>Pay a radiologist:</strong> sidebar <code>Doctor Payouts</code> → click <code>Mark Paid</code> → upload a receipt in the <strong>Process Payout</strong> window → click <code>Confirm Payment & Mark Paid</code>.",
+    "<strong>Radiologist checking earnings (read-only):</strong> Radiologist Dashboard → wallet icon → <strong>Revenue Ledger</strong> screen."
+  ],
+  mermaid: `flowchart TD
+    A["Admin Dashboard"] --> B["Sidebar: 'Tariff Master'"]
+    B --> C["Click 'New Rule'"]
+    C --> D["Fill in price/surcharge form"]
+    D --> E["Click 'Create Rule'"]
+    A --> F["Sidebar: 'Hospital Billing'"]
+    F --> G["Click 'Generate Monthly Run'"]
+    G --> H["Invoices appear in table"]
+    H --> I["'PDF' download or 'View Details'"]
+    A --> J["Sidebar: 'Doctor Payouts'"]
+    J --> K["Click 'Mark Paid' on a doctor"]
+    K --> L["Upload receipt"]
+    L --> M["Click 'Confirm Payment & Mark Paid'"]`,
+  notes: `<div class="notes">Sources: PricingManager.tsx, TariffModal.tsx, InvoiceList.tsx, PayoutManager.tsx, EarningsHistory.tsx.</div>`
+},
+{
+  title: "7. Real-Time Chat",
+  role: "Multiple",
+  steps: [
+    "From a case, click the chat icon (<code>Communication</code> for technicians, <code>Messenger</code> for radiologists) → a <strong>Case Chat</strong> panel slides in.",
+    "<strong>If you're a Technician:</strong> you can only message <code>QA Department</code> or start a <code>Group Discussion</code> — no direct 1:1 channel to the radiologist.",
+    "<strong>If you're QA or Admin:</strong> you also get a direct <code>Radiologist</code> option.",
+    "Type a message and send. Online presence for each role shows in the panel header.",
+    "All messages are stored, visible to QA/Admin for oversight, and logged for audit — by design."
+  ],
+  mermaid: `flowchart TD
+    A["Any case screen<br/>(Technician / QA / Radiologist)"] --> B["Click chat icon"]
+    B --> C["'Case Chat' panel slides in"]
+    C --> D{"Who can you message?"}
+    D -->|"Technician"| E["'QA Department' or<br/>'Group Discussion' only"]
+    D -->|"QA or Admin"| F["Direct 'Radiologist' option<br/>also available"]
+    E --> G["Type message, send"]
+    F --> G
+    G --> H["Visible to QA/Admin<br/>for oversight; logged for audit"]`,
+  notes: `<div class="notes">Sources: CaseChatHub.tsx.</div>`
+},
+{
+  title: "8. (Added) Admin: Configuring Viewer Tool Permissions",
+  role: "Admin",
+  steps: [
+    "Included because it's the real feature behind the Flow 5 caution above, and a regularly-used admin screen.",
+    "<strong>Admin Dashboard</strong> → sidebar <code>Viewer Control</code> (also linked as <code>Viewer Config</code> from the dashboard's quick-access grid — two names, one screen).",
+    "The screen's own title reads <strong>Tool access matrix</strong>.",
+    "Tools are grouped into 5 categories (Navigation, Measurements, Image Controls, Inspection & Analysis, Viewport Menus) against 5 role columns (Radiologist, Technician, QA, User, Institution).",
+    "Toggle individual switches, or use <code>All</code>/<code>None</code> per category, or <code>Enable all tools</code>/<code>Disable all tools</code> per role.",
+    "Click <code>Save configuration</code> → confirms <em>'Viewer restrictions saved successfully.'</em>"
+  ],
+  mermaid: `flowchart TD
+    A["Admin Dashboard"] --> B["Sidebar: 'Viewer Control'<br/>(aka 'Viewer Config')"]
+    B --> C["'Tool access matrix' screen"]
+    C --> D["Pick a role column:<br/>Radiologist / Technician / QA / User / Institution"]
+    D --> E["Toggle tool switches,<br/>or use 'All'/'None' per category"]
+    E --> F["Click 'Save configuration'"]
+    F --> G["Confirms: restrictions saved"]`,
+  notes: `<div class="callout"><strong>This screen tells you, in its own words, how it fails:</strong> "How it works: Only checked tools are visible in the Armorray Viewer for each role. If no tools are selected, all tools are shown by default (fail-open). Changes take effect on the next viewer session." An unconfigured or emptied-out role shows <em>every</em> tool, not none.</div>`
+},
+{
+  title: "Appendix — Screens That Don't Work as Older Docs Describe",
+  role: "Multiple",
+  steps: [],
+  mermaid: null,
+  notes: `<table class="appendix">
+    <tr><th>Screen/Component</th><th>Supposed to do</th><th>Actually true today</th></tr>
+    <tr><td>Identity-check &amp; image-quality checklist (VerificationView, IdentityComparison, QualityChecklist)</td><td>QA reviews identity/quality before approving a case</td><td>Not reachable — "Accept" skips straight to doctor assignment.</td></tr>
+    <tr><td>Technician BillingView</td><td>Billing summary for technicians</td><td>Fully built, but not connected to any button — not visible to technicians today.</td></tr>
+    <tr><td>Technician SecureChat</td><td>Earlier chat component</td><td>Unused, hardcoded demo data. Real chat is CaseChatHub.</td></tr>
+    <tr><td>AssignRadiologistModal</td><td>Manual radiologist assignment</td><td>Only used from Admin's "Browse Studies" — technicians never see it.</td></tr>
+    <tr><td>ReportVerification, MetadataPanel</td><td>A separate report sign-off screen</td><td>Not imported/used anywhere.</td></tr>
+    <tr><td>ReturnCorrectionModal</td><td>Send a report back for correction, separate from full rejection</td><td>Rendered in code, but no button opens it.</td></tr>
+    <tr><td>Technician's case-details modal</td><td>View full case info</td><td>Possibly unreachable — no confirmed button opens it. Needs a quick manual click-test.</td></tr>
+    <tr><td>Radiologist "Last 15 Days"/"Lifetime" buttons</td><td>Filter performance charts by period</td><td>Present but not wired — clicking does nothing.</td></tr>
+    <tr><td>Radiologist Worklist status filter</td><td>Filter cases by status</td><td>Dropdown options don't match the real status list used elsewhere — likely stale.</td></tr>
+    <tr><td>Admin PACS Vault's own "open in viewer" button</td><td>Same viewer launch as elsewhere</td><td>Uses a different hardcoded local address than the Radiologist dashboard — likely breaks in production.</td></tr>
+    <tr><td>Assignment screen footer note</td><td>Claims an "immediate encrypted hand-off via WhatsApp and SMS"</td><td>Treat as unverified/likely aspirational — WhatsApp notifications are a confirmed unbuilt to-do elsewhere in the backend.</td></tr>
+  </table>`
+}
+];
+
+let current = 0;
+
+function roleClass(role) {
+  return role.replace(/[^A-Za-z]/g, '') || 'Multiple';
+}
+
+function buildNav() {
+  const nav = document.getElementById('flowlist');
+  nav.innerHTML = '';
+  FLOWS.forEach((f, i) => {
+    const b = document.createElement('button');
+    b.textContent = f.title;
+    b.onclick = () => { current = i; render(); };
+    nav.appendChild(b);
+  });
+}
+
+async function render() {
+  const f = FLOWS[current];
+  document.querySelectorAll('#flowlist button').forEach((b, i) => {
+    b.classList.toggle('active', i === current);
+  });
+  document.getElementById('flow-title-text').textContent = f.title;
+  const badge = document.getElementById('flow-role-badge');
+  badge.textContent = f.role;
+  badge.className = 'badge ' + roleClass(f.role);
+  document.getElementById('flow-progress').textContent = `Flow ${current + 1} of ${FLOWS.length}`;
+
+  const stepsEl = document.getElementById('flow-steps');
+  stepsEl.innerHTML = '';
+  f.steps.forEach(s => {
+    const li = document.createElement('li');
+    li.innerHTML = s;
+    stepsEl.appendChild(li);
+  });
+
+  const diagramCol = document.querySelector('.diagram-col');
+  const target = document.getElementById('mermaid-target');
+  if (f.mermaid) {
+    diagramCol.style.display = '';
+    target.textContent = 'Rendering…';
+    try {
+      const { svg } = await mermaid.render('mermaid-svg-' + current, f.mermaid);
+      target.innerHTML = svg;
+    } catch (e) {
+      target.textContent = 'Diagram failed to render: ' + e.message;
+    }
+  } else {
+    diagramCol.style.display = 'none';
+  }
+
+  document.getElementById('flow-notes').innerHTML = f.notes || '';
+
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === FLOWS.length - 1;
+}
+
+document.getElementById('prevBtn').onclick = () => { if (current > 0) { current--; render(); } };
+document.getElementById('nextBtn').onclick = () => { if (current < FLOWS.length - 1) { current++; render(); } };
+
+buildNav();
+render();
+</script>
+
+</body>
+</html>

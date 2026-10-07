@@ -1,6 +1,6 @@
 services:
   orthanc:
-    image: jodogne/orthanc-plugins:latest
+    image: orthancteam/orthanc:latest
     container_name: orthanc_engine
     restart: always
     ports:
